@@ -15,6 +15,23 @@
 //     return view('welcome');
 // });
 
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/shirts', 'HomeController@shirts')->name('shirts');
-Route::get('/shirt', 'HomeController@shirt')->name('shirt');
+Route::get('/', 'FrontController@index')->name('home');
+Route::get('/shirts', 'FrontController@shirts')->name('shirts');
+Route::get('/shirt', 'FrontController@shirt')->name('shirt');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['prefix' => 'admin', 'middleware' =>'auth'], function (){
+      Route::get('/', function () {
+     return view('admin.index');
+   })->name('admin.index');
+
+   Route::resource('product','ProductsController');
+   Route::resource('category','CategoriesController');
+});
+
+Route::get('logout', 'Auth\LoginController@logout', function () {
+  return abort(404);
+});
